@@ -1,4 +1,7 @@
-class Form {
+import Input from './Input'
+import Button from './Button'
+
+export class Form {
 
     constructor(initialValue, onSubmit) {
         this.initialValue = initialValue
@@ -37,3 +40,5 @@ class Form {
     }
 
 }
+
+export default Form
