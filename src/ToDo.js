@@ -7,17 +7,33 @@ export class ToDo {
         this.storageKey = storageKey || 'todo'
         this.container = null
 
-        this.tasks = this.loadTasks() || []
+        this.tasks = []
+
+        this.loadTasks()
     }
 
     loadTasks() {
-        return JSON.parse(localStorage.getItem(this.storageKey))
+        return fetch('https://coderoad--sandbox-default-rtdb.firebaseio.com/todo/.json')
+            .then((response) => response.json())
+            .then((data) => {
+                this.tasks = data
+                this.render()
+            })
     }
 
     setTasks(newTasks) {
-        this.tasks = newTasks
-        localStorage.setItem(this.storageKey, JSON.stringify(this.tasks))
-        this.render()
+        return fetch(
+            'https://coderoad--sandbox-default-rtdb.firebaseio.com/todo/.json',
+            {
+                method: 'PUT',
+                body: JSON.stringify(newTasks)
+            }
+        )
+        .then((response) => response.json())
+        .then((tasksSavedInDb) => {
+            this.tasks = tasksSavedInDb
+            this.render()
+        })
     }
 
     deleteTask(indexToDelete) {
