@@ -1,5 +1,6 @@
 import Task from './Task'
 import Form from './Form'
+import Loader from './Loader'
 
 export class ToDo {
 
@@ -89,15 +90,14 @@ export class ToDo {
 
         if (this.container === null) {
             this.container = document.createElement('div')
+            this.container.style.position = 'relative'
         }
         
         this.container.innerHTML = ''
 
         if(this.isLoading) {
-            const text = document.createTextNode('Loading...')
-            this.container.appendChild(text)
-
-            return this.container
+            const loader = new Loader()
+            this.container.appendChild(loader.render())
         }
 
         const form = new Form('', (value) => this.addTask(value))
