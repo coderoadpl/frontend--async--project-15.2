@@ -9,7 +9,14 @@ export class ToDo {
 
         this.tasks = []
 
+        this.isLoading = true
+
         this.loadTasks()
+    }
+
+    setLoading(newLoading){
+        this.isLoading = newLoading
+        this.render()
     }
 
     loadTasks() {
@@ -79,8 +86,15 @@ export class ToDo {
         if (this.container === null) {
             this.container = document.createElement('div')
         }
-
+        
         this.container.innerHTML = ''
+
+        if(this.isLoading) {
+            const text = document.createTextNode('Loading...')
+            this.container.appendChild(text)
+
+            return this.container
+        }
 
         const form = new Form('', (value) => this.addTask(value))
 
