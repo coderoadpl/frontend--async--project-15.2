@@ -2,6 +2,8 @@ import Task from './Task'
 import Form from './Form'
 import Loader from './Loader'
 
+const makApiUrl = (key) =>  `https://coderoad--sandbox-default-rtdb.firebaseio.com/todo/${key}/.json`
+
 export class ToDo {
 
     constructor(storageKey) {
@@ -22,10 +24,10 @@ export class ToDo {
 
     loadTasks() {
         this.setLoading(true)
-        return fetch('https://coderoad--sandbox-default-rtdb.firebaseio.com/todo/.json')
+        return fetch(makApiUrl(this.storageKey))
             .then((response) => response.json())
             .then((data) => {
-                this.tasks = data
+                this.tasks = data || []
                 this.render()
             })
             .finally(() => this.setLoading(false))
@@ -34,7 +36,7 @@ export class ToDo {
     setTasks(newTasks) {
         this.setLoading(true)
         return fetch(
-            'https://coderoad--sandbox-default-rtdb.firebaseio.com/todo/.json',
+            makApiUrl(this.storageKey),
             {
                 method: 'PUT',
                 body: JSON.stringify(newTasks)
