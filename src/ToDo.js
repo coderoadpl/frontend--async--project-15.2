@@ -2,8 +2,7 @@ import Task from './Task'
 import Form from './Form'
 import Loader from './Loader'
 
-import { readAll } from './api/read'
-import { makeApiUrl } from './api/makeApiUrl'
+import { readAll, create } from './api'
 
 export class ToDo {
 
@@ -34,32 +33,32 @@ export class ToDo {
         this.setError(false)
         return readAll(this.storageKey)
             .then((data) => {
-                console.log(data)
-                if(Array.isArray(data) || data === null){
+                if (Array.isArray(data) || data === null) {
                     this.tasks = data || []
                 } else {
                     this.setError(true)
                 }
                 this.render()
             })
+            .catch(() => this.setError(true))
             .finally(() => this.setLoading(false))
     }
 
     setTasks(newTasks) {
-        this.setLoading(true)
-        return fetch(
-            makeApiUrl(this.storageKey),
-            {
-                method: 'PUT',
-                body: JSON.stringify(newTasks)
-            }
-        )
-            .then((response) => response.json())
-            .then((tasksSavedInDb) => {
-                this.tasks = tasksSavedInDb
-                this.render()
-            })
-            .finally(() => this.setLoading(false))
+        // this.setLoading(true)
+        // return fetch(
+        //     makeApiUrl(this.storageKey),
+        //     {
+        //         method: 'PUT',
+        //         body: JSON.stringify(newTasks)
+        //     }
+        // )
+        //     .then((response) => response.json())
+        //     .then((tasksSavedInDb) => {
+        //         this.tasks = tasksSavedInDb
+        //         this.render()
+        //     })
+        //     .finally(() => this.setLoading(false))
     }
 
     deleteTask(indexToDelete) {
@@ -74,8 +73,14 @@ export class ToDo {
             text: text,
             isCompleted: false,
         }
-        const newTasks = this.tasks.concat(newTaskData)
-        this.setTasks(newTasks)
+
+        this.setLoading(true)
+        this.setError(false)
+
+        return create(this.storageKey, newTaskData)
+            .then(() => this.loadTasks())
+            .catch(() => this.setError(true))
+            .finally(() => this.setLoading(false))
     }
 
     toggleComplete(indexToComplete) {
