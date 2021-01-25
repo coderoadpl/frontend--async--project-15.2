@@ -2,7 +2,7 @@ import Task from './Task'
 import Form from './Form'
 import Loader from './Loader'
 
-import { readAll, create } from './api'
+import { readAll, create, update } from './api'
 
 export class ToDo {
 
@@ -83,15 +83,17 @@ export class ToDo {
             .finally(() => this.setLoading(false))
     }
 
-    toggleComplete(indexToComplete) {
-        const newTasks = this.tasks.map((taskData, index) => {
-            if (index !== indexToComplete) return taskData
-            return {
-                text: taskData.text,
-                isCompleted: !taskData.isCompleted
-            }
-        })
-        this.setTasks(newTasks)
+    toggleComplete(taskData) {
+        const dataToUpdate = { isCompleted: !taskData.isCompleted }
+        const taskKey = taskData.key
+
+        this.setLoading(true)
+        this.setError(false)
+
+        return update(this.storageKey, taskKey, dataToUpdate)
+            .then(() => this.loadTasks())
+            .catch(() => this.setError(true))
+            .finally(() => this.setLoading(false))
     }
 
     renderTasks() {
@@ -100,7 +102,7 @@ export class ToDo {
         this.tasks.forEach((taskData, index) => {
             const task = new Task(
                 taskData,
-                () => this.toggleComplete(index),
+                () => this.toggleComplete(taskData),
                 () => this.deleteTask(index)
             )
             this.container.appendChild(task.render())
