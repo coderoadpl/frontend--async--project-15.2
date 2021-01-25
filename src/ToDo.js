@@ -34,6 +34,7 @@ export class ToDo {
         this.setError(false)
         return readAll(this.storageKey)
             .then((data) => {
+                console.log(data)
                 if(Array.isArray(data) || data === null){
                     this.tasks = data || []
                 } else {
