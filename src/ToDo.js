@@ -14,6 +14,7 @@ export class ToDo {
         this.tasks = []
 
         this.isLoading = true
+        this.hasError = false
 
         this.loadTasks()
     }
@@ -23,11 +24,21 @@ export class ToDo {
         this.render()
     }
 
+    setError(newError) {
+        this.hasError = newError
+        this.render()
+    }
+
     loadTasks() {
         this.setLoading(true)
+        this.setError(false)
         return readAll(this.storageKey)
             .then((data) => {
-                this.tasks = Array.isArray(data) ? data : []
+                if(Array.isArray(data) || data === null){
+                    this.tasks = data || []
+                } else {
+                    this.setError(true)
+                }
                 this.render()
             })
             .finally(() => this.setLoading(false))
@@ -78,6 +89,8 @@ export class ToDo {
     }
 
     renderTasks() {
+        if (!Array.isArray(this.tasks)) return
+
         this.tasks.forEach((taskData, index) => {
             const task = new Task(
                 taskData,
@@ -96,6 +109,11 @@ export class ToDo {
         }
 
         this.container.innerHTML = ''
+
+        if (this.hasError) {
+            const errorMessage = new Loader('Error ocurred!')
+            this.container.appendChild(errorMessage.render())
+        }
 
         if (this.isLoading) {
             const loader = new Loader()
