@@ -3,8 +3,7 @@ import Form from './Form'
 import Loader from './Loader'
 
 import { readAll } from './api/read'
-
-const makApiUrl = (key) => `https://coderoad--sandbox-default-rtdb.firebaseio.com/todo/${key}/.json`
+import { makeApiUrl } from './api/makeApiUrl'
 
 export class ToDo {
 
@@ -28,7 +27,7 @@ export class ToDo {
         this.setLoading(true)
         return readAll(this.storageKey)
             .then((data) => {
-                this.tasks = data || []
+                this.tasks = Array.isArray(data) ? data : []
                 this.render()
             })
             .finally(() => this.setLoading(false))
@@ -37,7 +36,7 @@ export class ToDo {
     setTasks(newTasks) {
         this.setLoading(true)
         return fetch(
-            makApiUrl(this.storageKey),
+            makeApiUrl(this.storageKey),
             {
                 method: 'PUT',
                 body: JSON.stringify(newTasks)
