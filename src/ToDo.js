@@ -2,7 +2,7 @@ import Task from './Task'
 import Form from './Form'
 import Loader from './Loader'
 
-import { readAll, create, update } from './api'
+import { readAll, create, update, remove } from './api'
 
 export class ToDo {
 
@@ -44,28 +44,16 @@ export class ToDo {
             .finally(() => this.setLoading(false))
     }
 
-    setTasks(newTasks) {
-        // this.setLoading(true)
-        // return fetch(
-        //     makeApiUrl(this.storageKey),
-        //     {
-        //         method: 'PUT',
-        //         body: JSON.stringify(newTasks)
-        //     }
-        // )
-        //     .then((response) => response.json())
-        //     .then((tasksSavedInDb) => {
-        //         this.tasks = tasksSavedInDb
-        //         this.render()
-        //     })
-        //     .finally(() => this.setLoading(false))
-    }
+    deleteTask(taskData) {
+        const taskKey = taskData.key
 
-    deleteTask(indexToDelete) {
-        const newTasks = this.tasks.filter((taskData, index) => {
-            return index !== indexToDelete
-        })
-        this.setTasks(newTasks)
+        this.setLoading(true)
+        this.setError(false)
+
+        return remove(this.storageKey, taskKey)
+            .then(() => this.loadTasks())
+            .catch(() => this.setError(true))
+            .finally(() => this.setLoading(false))
     }
 
     addTask(text) {
@@ -99,11 +87,11 @@ export class ToDo {
     renderTasks() {
         if (!Array.isArray(this.tasks)) return
 
-        this.tasks.forEach((taskData, index) => {
+        this.tasks.forEach((taskData) => {
             const task = new Task(
                 taskData,
                 () => this.toggleComplete(taskData),
-                () => this.deleteTask(index)
+                () => this.deleteTask(taskData)
             )
             this.container.appendChild(task.render())
         })
