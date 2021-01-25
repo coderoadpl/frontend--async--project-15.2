@@ -1,13 +1,12 @@
 import { makeApiUrl } from './makeApiUrl'
 
-export const update = (listKey, taskKey, dataToUpdate) => {
+export const remove = (listKey, taskKey) => {
     const apiUrl = makeApiUrl(`${listKey}/${taskKey}`)
 
     return fetch(apiUrl, {
-        method: 'PATCH',
-        body: JSON.stringify(dataToUpdate)
+        method: 'DELETE',
     })
         .then((response) => response.json())
 }
 
-export default update
+export default remove
