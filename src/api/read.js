@@ -1,5 +1,10 @@
-// @TODO task list read
+import { makeApiUrl } from './makeApiUrl'
 
-const readAll = () => {
-    
+export const readAll = (key) => {
+    const apiUrl = makeApiUrl(key)
+
+    return fetch(apiUrl)
+        .then((response) => response.json())
 }
+
+export default readAll

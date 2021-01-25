@@ -2,7 +2,9 @@ import Task from './Task'
 import Form from './Form'
 import Loader from './Loader'
 
-const makApiUrl = (key) =>  `https://coderoad--sandbox-default-rtdb.firebaseio.com/todo/${key}/.json`
+import { readAll } from './api/read'
+
+const makApiUrl = (key) => `https://coderoad--sandbox-default-rtdb.firebaseio.com/todo/${key}/.json`
 
 export class ToDo {
 
@@ -17,15 +19,14 @@ export class ToDo {
         this.loadTasks()
     }
 
-    setLoading(newLoading){
+    setLoading(newLoading) {
         this.isLoading = newLoading
         this.render()
     }
 
     loadTasks() {
         this.setLoading(true)
-        return fetch(makApiUrl(this.storageKey))
-            .then((response) => response.json())
+        return readAll(this.storageKey)
             .then((data) => {
                 this.tasks = data || []
                 this.render()
@@ -42,12 +43,12 @@ export class ToDo {
                 body: JSON.stringify(newTasks)
             }
         )
-        .then((response) => response.json())
-        .then((tasksSavedInDb) => {
-            this.tasks = tasksSavedInDb
-            this.render()
-        })
-        .finally(() => this.setLoading(false))
+            .then((response) => response.json())
+            .then((tasksSavedInDb) => {
+                this.tasks = tasksSavedInDb
+                this.render()
+            })
+            .finally(() => this.setLoading(false))
     }
 
     deleteTask(indexToDelete) {
@@ -94,10 +95,10 @@ export class ToDo {
             this.container = document.createElement('div')
             this.container.style.position = 'relative'
         }
-        
+
         this.container.innerHTML = ''
 
-        if(this.isLoading) {
+        if (this.isLoading) {
             const loader = new Loader()
             this.container.appendChild(loader.render())
         }
