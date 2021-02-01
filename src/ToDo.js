@@ -107,6 +107,11 @@ export class ToDo {
             .finally(() => this.setLoading(false))
     }
 
+    closeTaskInfoBox(){
+        this.task = null
+        this.render()
+    }
+
     renderTasks() {
         if (!Array.isArray(this.tasks)) return
 
@@ -126,7 +131,7 @@ export class ToDo {
         if (this.container === null) {
             this.container = document.createElement('div')
             this.container.style.position = 'relative'
-            this.container.style.minHeight = '80px'
+            this.container.style.minHeight = '120px'
         }
 
         this.container.innerHTML = ''
@@ -146,7 +151,8 @@ export class ToDo {
                 this.task.text,
                 this.task.isCompleted,
                 this.task.createdAt,
-                this.task.authorEmail
+                this.task.authorEmail,
+                () => this.closeTaskInfoBox()
             )
             this.container.appendChild(taskInfoBox.render())
         }
