@@ -14,6 +14,6 @@ export const readOne = (listKey, taskKey) => {
 
     return fetch(apiUrl)
         .then((response) => response.json())
-    }
+}
 
 export default readAll

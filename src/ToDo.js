@@ -3,7 +3,7 @@ import Form from './Form'
 import Loader from './Loader'
 import TaskInfoBox from './TaskInfoBox'
 
-import { readAll, create, update, remove } from './api'
+import { readOne, readAll, create, update, remove } from './api'
 
 export class ToDo {
 
@@ -12,6 +12,7 @@ export class ToDo {
         this.container = null
 
         this.tasks = []
+        this.task = null
 
         this.isLoading = true
         this.hasError = false
@@ -45,6 +46,25 @@ export class ToDo {
             .finally(() => this.setLoading(false))
     }
 
+    loadTask(taskData) {
+        const taskKey = taskData.key
+
+        this.setLoading(true)
+        this.setError(false)
+
+        return readOne(this.storageKey, taskKey)
+            .then((data) => {
+                if (data) {
+                    this.task = data
+                } else {
+                    this.setError(true)
+                }
+                this.render()
+            })
+            .catch(() => this.setError(true))
+            .finally(() => this.setLoading(false))
+    }
+
     deleteTask(taskData) {
         const taskKey = taskData.key
 
@@ -61,8 +81,8 @@ export class ToDo {
         const newTaskData = {
             text: text,
             isCompleted: false,
-            createdAt:  (new Date()).toISOString(),
-            authorEmail: 'kontakt@coderoad.pl' 
+            createdAt: (new Date()).toISOString(),
+            authorEmail: 'kontakt@coderoad.pl'
         }
 
         this.setLoading(true)
@@ -95,7 +115,7 @@ export class ToDo {
                 taskData,
                 () => this.toggleComplete(taskData),
                 () => this.deleteTask(taskData),
-                () => console.log(taskData),
+                () => this.loadTask(taskData),
             )
             this.container.appendChild(task.render())
         })
@@ -111,9 +131,6 @@ export class ToDo {
 
         this.container.innerHTML = ''
 
-        const taskInfoBox = new TaskInfoBox('text', 'isCompleted', 'createdAt', 'authorEmail')
-        this.container.appendChild(taskInfoBox.render())
-
         if (this.hasError) {
             const errorMessage = new Loader('Error ocurred!')
             this.container.appendChild(errorMessage.render())
@@ -122,6 +139,16 @@ export class ToDo {
         if (this.isLoading) {
             const loader = new Loader()
             this.container.appendChild(loader.render())
+        }
+
+        if (this.task !== null) {
+            const taskInfoBox = new TaskInfoBox(
+                this.task.text,
+                this.task.isCompleted,
+                this.task.createdAt,
+                this.task.authorEmail
+            )
+            this.container.appendChild(taskInfoBox.render())
         }
 
         const form = new Form('', (value) => this.addTask(value))
