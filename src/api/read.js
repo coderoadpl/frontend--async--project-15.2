@@ -9,4 +9,11 @@ export const readAll = (key) => {
         .then((data) => objectToArray(data, 'key'))
 }
 
+export const readOne = (listKey, taskKey) => {
+    const apiUrl = makeApiUrl(`${listKey}/${taskKey}`)
+
+    return fetch(apiUrl)
+        .then((response) => response.json())
+    }
+
 export default readAll
