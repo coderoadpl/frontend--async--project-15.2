@@ -2,10 +2,11 @@ import Button from './Button'
 
 export class Task {
 
-    constructor(task, onComplete, onDelete) {
+    constructor(task, onComplete, onDelete, onInfoClick) {
         this.task = task
         this.onComplete = onComplete
         this.onDelete = onDelete
+        this.onInfoClick = onInfoClick
     }
 
     render() {
@@ -13,6 +14,7 @@ export class Task {
         const container = document.createElement('div')
         const p = document.createElement('p')
         const deleteButton = new Button('Delete', this.onDelete)
+        const infoButton = new Button('Info', this.onInfoClick)
 
         p.innerText = this.task.text
 
@@ -38,6 +40,7 @@ export class Task {
         )
 
         container.appendChild(p)
+        container.appendChild(infoButton.render())
         container.appendChild(deleteButton.render())
 
         return container

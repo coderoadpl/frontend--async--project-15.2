@@ -93,7 +93,8 @@ export class ToDo {
             const task = new Task(
                 taskData,
                 () => this.toggleComplete(taskData),
-                () => this.deleteTask(taskData)
+                () => this.deleteTask(taskData),
+                () => console.log(taskData),
             )
             this.container.appendChild(task.render())
         })
