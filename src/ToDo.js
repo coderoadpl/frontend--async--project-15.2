@@ -60,6 +60,8 @@ export class ToDo {
         const newTaskData = {
             text: text,
             isCompleted: false,
+            createdAt:  (new Date()).toISOString(),
+            authorEmail: 'kontakt@coderoad.pl' 
         }
 
         this.setLoading(true)
