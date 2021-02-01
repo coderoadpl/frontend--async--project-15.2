@@ -1,6 +1,7 @@
 import Task from './Task'
 import Form from './Form'
 import Loader from './Loader'
+import TaskInfoBox from './TaskInfoBox'
 
 import { readAll, create, update, remove } from './api'
 
@@ -105,9 +106,13 @@ export class ToDo {
         if (this.container === null) {
             this.container = document.createElement('div')
             this.container.style.position = 'relative'
+            this.container.style.minHeight = '80px'
         }
 
         this.container.innerHTML = ''
+
+        const taskInfoBox = new TaskInfoBox('text', 'isCompleted', 'createdAt', 'authorEmail')
+        this.container.appendChild(taskInfoBox.render())
 
         if (this.hasError) {
             const errorMessage = new Loader('Error ocurred!')

@@ -16,7 +16,7 @@ export class Loader {
         div.style.display = 'flex'
         div.style.justifyContent = 'center'
         div.style.alignItems = 'center'
-        div.style.zIndex = 1
+        div.style.zIndex = 2
         div.style.fontFamily = 'sans-serif'
         div.style.backgroundColor = 'rgba(255, 255, 255, 0.65)'
 
