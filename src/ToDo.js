@@ -1,7 +1,7 @@
-import Task from './Task'
-import Form from './Form'
-import Loader from './Loader'
-import TaskInfoBox from './TaskInfoBox'
+import Task from './components/Task'
+import Form from './components/Form'
+import Loader from './components/Loader'
+import TaskInfoBox from './components/TaskInfoBox'
 
 import { readOne, readAll, create, update, remove } from './api'
 
