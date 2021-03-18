@@ -1,13 +1,26 @@
+import Button from './components/LoginForms/Button'
 import Task from './components/Task'
 import Form from './components/Form'
 import Loader from './components/Loader'
 import TaskInfoBox from './components/TaskInfoBox'
 
+import { logOut } from './auth'
+
 import { readOne, readAll, create, update, remove } from './api'
 
 export class ToDo {
 
-    constructor(storageKey) {
+    constructor(props) {
+        const {
+            storageKey,
+            checkIfUserIsLoggedInThenChangeLoggedInState,
+            setLoggedIn,
+            setIsLoading,
+        } = props
+
+        this.checkIfUserIsLoggedInThenChangeLoggedInState = checkIfUserIsLoggedInThenChangeLoggedInState
+        this.setLoggedIn = setLoggedIn
+        this.setIsLoading = setIsLoading
         this.storageKey = storageKey || 'todo'
         this.container = null
 
@@ -107,7 +120,7 @@ export class ToDo {
             .finally(() => this.setLoading(false))
     }
 
-    closeTaskInfoBox(){
+    closeTaskInfoBox() {
         this.task = null
         this.render()
     }
@@ -135,6 +148,11 @@ export class ToDo {
         }
 
         this.container.innerHTML = ''
+
+        const buttonElement = new Button('Log out', () => {
+            logOut().then(() => this.setLoggedIn(false))
+        })
+        this.container.appendChild(buttonElement.render())
 
         if (this.hasError) {
             const errorMessage = new Loader('Error ocurred!')

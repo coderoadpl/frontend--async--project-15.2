@@ -7,9 +7,15 @@ import ToDo from './ToDo'
 
 const makeToDo = (storageKey) => {
     return class ToDoWrapper {
+        constructor(props) {
+            this.props = props
+        }
 
         render() {
-            const todo1 = new ToDo(storageKey)
+            const todo1 = new ToDo({
+                storageKey,
+                ...this.props
+            })
 
             return todo1.render()
         }
