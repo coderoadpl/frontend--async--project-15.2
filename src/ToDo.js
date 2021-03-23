@@ -16,12 +16,14 @@ export class ToDo {
             checkIfUserIsLoggedInThenChangeLoggedInState,
             setLoggedIn,
             setIsLoading,
+            userData,
         } = props
 
         this.checkIfUserIsLoggedInThenChangeLoggedInState = checkIfUserIsLoggedInThenChangeLoggedInState
         this.setLoggedIn = setLoggedIn
         this.setIsLoading = setIsLoading
-        this.storageKey = storageKey || 'todo'
+        this.storageKey = (userData && userData.localId) || 'todo'
+        this.userData = userData
         this.container = null
 
         this.tasks = []
@@ -95,7 +97,7 @@ export class ToDo {
             text: text,
             isCompleted: false,
             createdAt: (new Date()).toISOString(),
-            authorEmail: 'kontakt@coderoad.pl'
+            authorEmail: this.userData && this.userData.email
         }
 
         this.setLoading(true)

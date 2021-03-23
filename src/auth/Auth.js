@@ -1,4 +1,5 @@
 import { checkIfUserIsLoggedIn } from './checkIfUserIsLoggedIn'
+import { getUserData } from './getUserData'
 
 export class Auth {
 
@@ -16,6 +17,7 @@ export class Auth {
         this.container = null
         this.isLoggedIn = false
         this.isLoading = true
+        this.userData = null
 
         this.init()
     }
@@ -24,9 +26,24 @@ export class Auth {
         this.checkIfUserIsLoggedInThenChangeLoggedInState()
     }
 
+    fetchUserData() {
+        this.setIsLoading(true)
+        return getUserData()
+            .then((data) => this.setUserData(data))
+            .catch(() => this.setUserData(null))
+            .finally(() => this.setIsLoading(false))
+    }
+
+    setUserData(newUserData) {
+        console.log(newUserData)
+        this.userData = newUserData
+        this.render()
+    }
+
     setLoggedIn(newLoggedIn) {
         this.isLoggedIn = newLoggedIn
         this.render()
+        return this.fetchUserData()
     }
 
     setIsLoading(newLoading) {
@@ -59,10 +76,12 @@ export class Auth {
         const checkIfUserIsLoggedInThenChangeLoggedInState = this.checkIfUserIsLoggedInThenChangeLoggedInState.bind(this)
         const setLoggedIn = this.setLoggedIn.bind(this)
         const setIsLoading = this.setIsLoading.bind(this)
+        const userData = this.userData
         const componentProps = {
             checkIfUserIsLoggedInThenChangeLoggedInState,
             setLoggedIn,
-            setIsLoading
+            setIsLoading,
+            userData
         }
 
         if (!this.isLoggedIn) {
