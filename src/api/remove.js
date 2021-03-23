@@ -1,12 +1,12 @@
 import { makeApiUrl } from './makeApiUrl'
+import { makeAuthorizedRequest } from '../auth'
 
 export const remove = (listKey, taskKey) => {
     const apiUrl = makeApiUrl(`${listKey}/${taskKey}`)
 
-    return fetch(apiUrl, {
+    return makeAuthorizedRequest(apiUrl, {
         method: 'DELETE',
     })
-        .then((response) => response.json())
 }
 
 export default remove

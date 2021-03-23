@@ -42,7 +42,6 @@ export class Auth {
 
     setLoggedIn(newLoggedIn) {
         this.isLoggedIn = newLoggedIn
-        this.render()
         return this.fetchUserData()
     }
 
@@ -56,9 +55,6 @@ export class Auth {
             .then((isLoggedIn) => {
                 this.setLoggedIn(isLoggedIn)
             })
-            .finally(() => {
-                this.setIsLoading(false)
-            })
     }
 
     render() {
@@ -71,6 +67,7 @@ export class Auth {
         if (this.isLoading) {
             const elementLoader = new this.ComponentLoader()
             this.container.appendChild(elementLoader.render())
+            return this.container
         }
 
         const checkIfUserIsLoggedInThenChangeLoggedInState = this.checkIfUserIsLoggedInThenChangeLoggedInState.bind(this)

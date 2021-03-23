@@ -1,13 +1,13 @@
 import { makeApiUrl } from './makeApiUrl'
+import { makeAuthorizedRequest } from '../auth'
 
 export const update = (listKey, taskKey, dataToUpdate) => {
     const apiUrl = makeApiUrl(`${listKey}/${taskKey}`)
 
-    return fetch(apiUrl, {
+    return makeAuthorizedRequest(apiUrl, {
         method: 'PATCH',
         body: JSON.stringify(dataToUpdate)
     })
-        .then((response) => response.json())
 }
 
 export default update

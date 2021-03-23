@@ -1,13 +1,13 @@
 import { makeApiUrl } from './makeApiUrl'
+import { makeAuthorizedRequest } from '../auth'
 
 export const create = (key, dataToSave) => {
     const apiUrl = makeApiUrl(key)
 
-    return fetch(apiUrl, {
+    return makeAuthorizedRequest(apiUrl, {
         method: 'POST',
         body: JSON.stringify(dataToSave)
     })
-        .then((response) => response.json())
 }
 
 export default create
